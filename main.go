@@ -15,6 +15,7 @@ func main() {
 	Initializer()
 	var conf config = config{
 		LocationBaseUrl: "https://pokeapi.co/api/v2/location-area/",
+		PokeApiBaseUrl: "https://pokeapi.co/api/v2/",
 		PreviousURL:     "",
 		NextURL:         "https://pokeapi.co/api/v2/location-area/",
 		curCommand:      receivedCommand{name: "", params: []string{}},

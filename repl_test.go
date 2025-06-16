@@ -68,7 +68,8 @@ func TestExplore(t *testing.T) {
 			},
 		},
 	}
-
+	
+	// t.Run()
 	for _, c := range cases {
 		CommandExplore(&c.conf)
 	}

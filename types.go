@@ -4,6 +4,7 @@ import "github.com/RazafimanantsoaJohnson/pokedexcli/internal/pokecache"
 
 type config struct {
 	LocationBaseUrl string
+	PokeApiBaseUrl string
 	NextURL         string
 	PreviousURL     string
 	curCommand      receivedCommand
@@ -44,4 +45,10 @@ type pokemonInLocation struct {
 type receivedCommand struct {
 	name   string
 	params []string
+}
+
+type pokemonResponse struct{
+	Id int `json:"id"`
+	Name string `json:"name"`
+	BaseExperience int `json:"base_experience"`
 }

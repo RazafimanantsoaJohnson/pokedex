@@ -100,6 +100,37 @@ func CommandExplore(conf *config) error {
 	}
 }
 
+func CommandCatch(conf *config) error{
+	pokemonToCatch:= conf.curCommand.params[0]
+	var body []byte
+	url:= conf.PokeApiBaseUrl + "pokemon/"+ pokemonToCatch
+	cachedResult, isPresent:= conf.cache.Get(url)
+	fmt.Printf("Throwing a Pokeball at %v\n", pokemonToCatch)
+	if isPresent{
+
+	}else{
+		res, err:= http.Get(url)
+		if err!= nil{
+			return fmt.Errorf("a network error occured when trying to get pokemon data")
+		}
+		defer res.Body.Close()
+		body, err = io.ReadAll(res.Body)
+		if err!= nil{
+			return fmt.Errorf("error occured when converting the body in []byte")
+		}
+	}
+}
+
+func decodeAndCatchPokemon(resBody []byte) (boolean, error){
+	var response pokemonResponse
+	err:= json.Unmarshal(resBody, &response)
+	if err!= nil{
+		return err
+	}
+	
+	
+}
+
 func Initializer() {
 	SupportedCommands = map[string]cliCommand{
 		"exit": {
