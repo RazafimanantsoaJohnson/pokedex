@@ -1,6 +1,11 @@
 package main
 
-import "testing"
+import (
+	"testing"
+	"time"
+
+	"github.com/RazafimanantsoaJohnson/pokedexcli/internal/pokecache"
+)
 
 func TestCleanInput(t *testing.T) {
 	cases := []struct {
@@ -30,5 +35,41 @@ func TestCleanInput(t *testing.T) {
 				return
 			}
 		}
+	}
+}
+
+func TestExplore(t *testing.T) {
+	cases := []struct {
+		conf     config
+		expected []string
+	}{
+		{
+			conf: config{
+				LocationBaseUrl: "https://pokeapi.co/api/v2/location-area/",
+				PreviousURL:     "",
+				NextURL:         "https://pokeapi.co/api/v2/location-area/",
+				curCommand:      receivedCommand{name: "explore", params: []string{"pastoria-city-area"}},
+				cache:           pokecache.NewCache(5 * time.Second),
+			},
+			expected: []string{
+				"tenatacool", "tenatacruel", "magikarp", "gyarados", "remoraid", "octillery", "wingull", "pelipper", "shellos", "gastrodon",
+			},
+		},
+		{
+			conf: config{
+				LocationBaseUrl: "https://pokeapi.co/api/v2/location-area/",
+				PreviousURL:     "",
+				NextURL:         "https://pokeapi.co/api/v2/location-area/",
+				curCommand:      receivedCommand{name: "explore", params: []string{"canalave-city-area"}},
+				cache:           pokecache.NewCache(5 * time.Second),
+			},
+			expected: []string{
+				"tenatacool", "tenatacruel", "magikarp", "gyarados", "remoraid", "octillery", "wingull", "pelipper", "shellos", "gastrodon",
+			},
+		},
+	}
+
+	for _, c := range cases {
+		CommandExplore(&c.conf)
 	}
 }

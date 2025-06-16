@@ -14,10 +14,11 @@ func main() {
 	scannr := bufio.NewScanner(os.Stdin)
 	Initializer()
 	var conf config = config{
-		PreviousURL: "url1",
-		NextURL:     "https://pokeapi.co/api/v2/location-area/",
-		curCommand:  "",
-		cache:       pokecache.NewCache(5 * time.Second),
+		LocationBaseUrl: "https://pokeapi.co/api/v2/location-area/",
+		PreviousURL:     "",
+		NextURL:         "https://pokeapi.co/api/v2/location-area/",
+		curCommand:      receivedCommand{name: "", params: []string{}},
+		cache:           pokecache.NewCache(5 * time.Second),
 	}
 
 	fmt.Print("Pokedex >")
@@ -30,7 +31,10 @@ func main() {
 		}
 		command, ok := SupportedCommands[inputs[0]]
 		if ok {
-			conf.curCommand = command.name
+			conf.curCommand.name = command.name
+			if len(inputs) > 1 {
+				conf.curCommand.params = inputs[1:]
+			}
 			err := SupportedCommands[command.name].callback(&conf)
 			if err != nil {
 				fmt.Println(err.Error())

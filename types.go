@@ -3,10 +3,11 @@ package main
 import "github.com/RazafimanantsoaJohnson/pokedexcli/internal/pokecache"
 
 type config struct {
-	NextURL     string
-	PreviousURL string
-	curCommand  string
-	cache       pokecache.Cache
+	LocationBaseUrl string
+	NextURL         string
+	PreviousURL     string
+	curCommand      receivedCommand
+	cache           pokecache.Cache
 }
 
 type cliCommand struct {
@@ -25,4 +26,22 @@ type locationResponse struct {
 type locationResults struct {
 	Name string `json:"name"`
 	Url  string `json:"url"`
+}
+
+type specificLocationResponse struct {
+	PokemonEncounters []pokemonEncounter `json:"pokemon_encounters"`
+}
+
+type pokemonEncounter struct {
+	Pokemon pokemonInLocation `json:"pokemon"`
+}
+
+type pokemonInLocation struct {
+	Name string `json:"name"`
+	Url  string `json:"url"`
+}
+
+type receivedCommand struct {
+	name   string
+	params []string
 }

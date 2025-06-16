@@ -42,8 +42,44 @@ func CommandMap(conf *config) error {
 		}
 		return nil
 	}
-	if conf.curCommand == "mapb" {
+	if conf.curCommand.name == "mapb" {
 		url = conf.PreviousURL
+	}
+	var body []byte
+	cachedResult, isPresent := conf.cache.Get(url)
+	if isPresent {
+		// fmt.Println("We are using cache here BTW :3")
+		return decodeAndShowResult(cachedResult)
+	} else {
+		res, err := http.Get(url)
+		if err != nil {
+			return err
+		}
+		defer res.Body.Close()
+		body, err = io.ReadAll(res.Body)
+		if err != nil {
+			return fmt.Errorf("An error happened when converting the body in []byte")
+		}
+		return decodeAndShowResult(body)
+	}
+}
+
+func CommandExplore(conf *config) error {
+	if len(conf.curCommand.params) <= 0 {
+		return fmt.Errorf("this command require 1 argument")
+	}
+	url := conf.LocationBaseUrl + conf.curCommand.params[0]
+	decodeAndShowResult := func(body []byte) error { // first class function to decode and show the result
+		var result specificLocationResponse
+		conf.cache.Add(url, body)
+		err := json.Unmarshal(body, &result)
+		if err != nil {
+			return err
+		}
+		for _, encounter := range result.PokemonEncounters {
+			fmt.Println(encounter.Pokemon.Name)
+		}
+		return nil
 	}
 	var body []byte
 	cachedResult, isPresent := conf.cache.Get(url)
@@ -85,6 +121,11 @@ func Initializer() {
 			name:        "mapb",
 			description: "shows previous 20 locations in our world",
 			callback:    CommandMap,
+		},
+		"explore": {
+			name:        "explore",
+			description: "List the pokemons we can find in the location given as argument",
+			callback:    CommandExplore,
 		},
 	}
 }
