@@ -7,21 +7,20 @@ import (
 	"strings"
 	"time"
 
-	"github.com/RazafimanantsoaJohnson/pokedexcli/internal/commands"
 	"github.com/RazafimanantsoaJohnson/pokedexcli/internal/pokecache"
 )
 
 func main() {
 	scannr := bufio.NewScanner(os.Stdin)
-	var conf commands.Config = commands.Config{
+	var conf Config = Config{
 		LocationBaseUrl:   "https://pokeapi.co/api/v2/location-area/",
 		PokeApiBaseUrl:    "https://pokeapi.co/api/v2/",
 		PreviousURL:       "",
 		NextURL:           "https://pokeapi.co/api/v2/location-area/",
-		SupportedCommands: commands.Initializer(),
-		CurCommand:        commands.ReceivedCommand{Name: "", Params: []string{}},
+		SupportedCommands: Initializer(),
+		CurCommand:        ReceivedCommand{Name: "", Params: []string{}},
 		Cache:             pokecache.NewCache(5 * time.Second),
-		Pokedex:           make(map[string]commands.Pokemon),
+		Pokedex:           make(map[string]Pokemon),
 	}
 
 	fmt.Print("Pokedex >")
@@ -32,13 +31,13 @@ func main() {
 			fmt.Print("Pokedex >")
 			continue
 		}
-		command, ok := conf.SupportedCommands[inputs[0]]
+		command, ok := (*conf.SupportedCommands)[inputs[0]]
 		if ok {
-			conf.CurCommand.name = command.name
+			conf.CurCommand.Name = command.Name
 			if len(inputs) > 1 {
-				conf.CurCommand.params = inputs[1:]
+				conf.CurCommand.Params = inputs[1:]
 			}
-			err := SupportedCommands[command.name].callback(&conf)
+			err := (*conf.SupportedCommands)[command.Name].Callback(&conf)
 			if err != nil {
 				fmt.Println(err.Error())
 			}

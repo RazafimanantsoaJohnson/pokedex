@@ -4,7 +4,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/RazafimanantsoaJohnson/pokedexcli/internal/commands"
 	"github.com/RazafimanantsoaJohnson/pokedexcli/internal/pokecache"
 )
 
@@ -41,30 +40,30 @@ func TestCleanInput(t *testing.T) {
 
 func TestExplore(t *testing.T) {
 	cases := []struct {
-		conf     commands.Config
+		conf     Config
 		expected []string
 	}{
 		{
-			conf: commands.Config{
+			conf: Config{
 				LocationBaseUrl:   "https://pokeapi.co/api/v2/location-area/",
 				PreviousURL:       "",
 				NextURL:           "https://pokeapi.co/api/v2/location-area/",
-				curCommand:        ReceivedCommand{name: "explore", params: []string{"pastoria-city-area"}},
-				cache:             pokecache.NewCache(5 * time.Second),
-				pokedex:           make(map[string]commands.Pokemon),
-				SupportedCommands: commands.Initializer(),
+				CurCommand:        ReceivedCommand{Name: "explore", Params: []string{"pastoria-city-area"}},
+				Cache:             pokecache.NewCache(5 * time.Second),
+				Pokedex:           make(map[string]Pokemon),
+				SupportedCommands: Initializer(),
 			},
 			expected: []string{
 				"tenatacool", "tenatacruel", "magikarp", "gyarados", "remoraid", "octillery", "wingull", "pelipper", "shellos", "gastrodon",
 			},
 		},
 		{
-			conf: config{
+			conf: Config{
 				LocationBaseUrl: "https://pokeapi.co/api/v2/location-area/",
 				PreviousURL:     "",
 				NextURL:         "https://pokeapi.co/api/v2/location-area/",
-				curCommand:      receivedCommand{name: "explore", params: []string{"canalave-city-area"}},
-				cache:           pokecache.NewCache(5 * time.Second),
+				CurCommand:      ReceivedCommand{Name: "explore", Params: []string{"canalave-city-area"}},
+				Cache:           pokecache.NewCache(5 * time.Second),
 			},
 			expected: []string{
 				"tenatacool", "tenatacruel", "magikarp", "gyarados", "remoraid", "octillery", "wingull", "pelipper", "shellos", "gastrodon",
